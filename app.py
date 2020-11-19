@@ -14,6 +14,8 @@ app = dash.Dash(__name__,
     update_title=None
 )
 
+server = app.server
+
 df = pd.read_csv('data/aldeias_indigenas.csv')
 
 regions = df.NM_REGIAO.unique()
