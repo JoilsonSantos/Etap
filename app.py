@@ -65,7 +65,7 @@ app.layout = html.Div([
                 html.A('aqui', target='_blank', href='https://agenciadenoticias.ibge.gov.br/agencia-sala-de-imprensa/2013-agencia-de-noticias/releases/14126-asi-ibge-disponibiliza-coordenadas-e-altitudes-para-21304-localidades-brasileiras'),
                 '''. A localização geográfica em longitude, latitude e altitude das aldeias podem
                 ser visualizadas no mapa. Além disso, o gráfico de barras mostra a
-                quantidade de aldeias por região.
+                quantidade de aldeias por Unidade Federativa.
                 Os dados utilizados e as informações de classificação das localidades podem ser acessadas clicando
                 ''',
                 html.A('aqui', target='blank', href='ftp://geoftp.ibge.gov.br/organizacao_do_territorio/estrutura_territorial/localidades'),
@@ -149,4 +149,4 @@ def update_graph(selected_regions, selected_states) :
 
 
 if __name__ == '__main__':
-    app.run_server()
+    app.run_server(debug=True)
