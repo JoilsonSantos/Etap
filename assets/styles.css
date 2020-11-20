@@ -47,12 +47,12 @@ body, input, button {
 }
 
 .left {
-    min-height: calc(100vh - 5rem);
     display: flex;
-    align-items: center;
     justify-content: center;
     padding: 0 1rem;
     flex-direction: column;
+    height: fit-content;
+    padding-top: 1.5rem;
 }
 
 .left h1 {
@@ -75,9 +75,20 @@ body, input, button {
 @media only screen and (min-width: 767px) {
     .left {
         width: 45%;
+        min-height: calc(100vh - 5rem);
     }
 
     .right {
         width: 55%;
     }
+}
+
+.dash-dropdown {
+    width: 100%;
+    margin-bottom: 2rem;
+    outline: none;
+}
+
+.Select-control {
+    box-shadow: none !important;
 }

@@ -19,6 +19,7 @@ server = app.server
 df = pd.read_csv('data/aldeias_indigenas.csv')
 
 regions = df.NM_REGIAO.unique()
+states_by_region = {region: df[df.NM_REGIAO == region].UF.unique() for region in regions}
 
 app.layout = html.Div([
 
@@ -36,8 +37,24 @@ app.layout = html.Div([
         html.Div([
 
             html.H1('Localização Geográfica das Aldeias Indígenas Brasileiras'),
+
+            html.P('Selecione as localidades para filtrar os resultados:'),
+
+            dcc.Dropdown(
+                id='regions',
+                options=[{'label': region, 'value': region} for region in regions],
+                placeholder='Selecione regiões',
+                multi=True,
+            ),
+
+            dcc.Dropdown(
+                id='states',
+                placeholder='Selecione estados',
+                multi=True,
+            ),
+
             html.P('''
-                    O IBGE disponibiliza dados geográficos de localidades brasileiras
+                    O IBGE disponibilizou dados geográficos de localidades brasileiras
                     de acordo com pesquisa feita em 2010. Dentre os locais, foram classificados
                     como "ALDEIA INDÍGENA" os pontos que possuem "casa ou conjunto de casas ou
                     malocas [...] que serve de habitação para o
@@ -53,15 +70,7 @@ app.layout = html.Div([
                 ''',
                 html.A('aqui', target='blank', href='ftp://geoftp.ibge.gov.br/organizacao_do_territorio/estrutura_territorial/localidades'),
                 '.'
-            ]),
-
-            dcc.Dropdown(
-                id='regions',
-                options=[{'label': region, 'value': region} for region in regions],
-                value=regions,
-                multi=True,
-                className='dropdown'
-            )
+            ])
 
         ], className='left'),
 
@@ -83,17 +92,33 @@ app.layout = html.Div([
                  
 ])
 
+@app.callback(
+    Output('states', 'options'),
+    [Input('regions', 'value')])
+def set_states_options(selected_regions):
+    if selected_regions is None or len(selected_regions) <= 0:
+        selected_regions = regions[:]
+
+    return [{'label': state, 'value': state} for region in selected_regions for state in states_by_region[region]]
+
+
 @app.callback([
     Output('map', 'figure'),
-    Output('bar', 'figure'),
-    ],
-    Input('regions', 'value'))
-def update_graph(selected_regions) :
-    
-    if len(selected_regions) <= 0 :
-        selected_regions = regions
+    Output('bar', 'figure')
+    ],[
+    Input('regions', 'value'),
+    Input('states', 'value')
+    ]
+)
+def update_graph(selected_regions, selected_states) :
 
-    map = px.scatter_mapbox(df[df.NM_REGIAO.isin(selected_regions)], 
+    if selected_regions is None or len(selected_regions) <= 0:
+        selected_regions = regions[:]
+    
+    if selected_states is None or len(selected_states) <= 0:
+        selected_states = df.UF.unique()
+
+    fig_map = px.scatter_mapbox(df[df.NM_REGIAO.isin(selected_regions) & df.UF.isin(selected_states)], 
                             lat='LAT', 
                             lon='LONG', 
                             color='ALT',
@@ -103,23 +128,25 @@ def update_graph(selected_regions) :
                             zoom=2.8,
                             mapbox_style='carto-positron')
 
-    map.update_layout(margin={'r':0,'t':0,'l':0,'b':0}, coloraxis_colorbar={'xanchor':'right', 'x':1})
+    fig_map.update_layout(margin={'r':0,'t':0,'l':0,'b':0}, coloraxis_colorbar={'xanchor':'right', 'x':1})
 
     count_df = df[['UF', 'UF_SIGLA', 'NM_REGIAO', 'REGIAO_SIGLA', 'ID']].groupby(['UF', 'UF_SIGLA', 'NM_REGIAO', 'REGIAO_SIGLA']).count().reset_index(level=['UF', 'UF_SIGLA', 'NM_REGIAO', 'REGIAO_SIGLA'])
     count_df.rename(columns={'ID': 'ALDEIAS'}, inplace=True)
 
-    bar = go.Figure(data=[go.Bar(
-                x=count_df[count_df.NM_REGIAO.isin(selected_regions)]['UF_SIGLA'],
+    count_df = count_df[count_df.NM_REGIAO.isin(selected_regions) & count_df.UF.isin(selected_states)]
+
+    fig_bar = go.Figure(data=[go.Bar(
+                x=count_df['UF_SIGLA'],
                 y=count_df['ALDEIAS'],
                 text=count_df['ALDEIAS'],
                 textposition='auto')])
 
-    bar.update_layout(showlegend=False,
+    fig_bar.update_layout(showlegend=False,
                     margin={'r':0,'t':0,'l':0,'b':0},
                     yaxis={'visible': False, 'showticklabels': False})
 
-    return map, bar
+    return fig_map, fig_bar
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server()
