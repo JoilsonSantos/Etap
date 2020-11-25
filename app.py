@@ -11,7 +11,11 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css', 'https://f
 app = dash.Dash(__name__,
     external_stylesheets=external_stylesheets,
     title='Aldeias Indígenas',
-    update_title=None
+    update_title=None,
+    meta_tags=[{
+      'name': 'viewport',
+      'content': 'width=device-width, initial-scale=1.0'
+    }]
 )
 
 server = app.server
@@ -112,11 +116,18 @@ def set_states_options(selected_regions):
 )
 def update_graph(selected_regions, selected_states) :
 
-    if selected_regions is None or len(selected_regions) <= 0:
+    if selected_regions is None or len(selected_regions) <= 0 :
         selected_regions = regions[:]
-    
-    if selected_states is None or len(selected_states) <= 0:
-        selected_states = df.UF.unique()
+
+    selected_states = list(selected_states or [])
+
+    available_states = df[df.NM_REGIAO.isin(selected_regions)].UF.unique()
+
+    selected_states = [state for state in selected_states if state in available_states]
+
+    if len(selected_states) <= 0 :
+        selected_states = available_states[:]
+
 
     fig_map = px.scatter_mapbox(df[df.NM_REGIAO.isin(selected_regions) & df.UF.isin(selected_states)], 
                             lat='LAT', 

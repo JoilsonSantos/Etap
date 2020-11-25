@@ -6,11 +6,17 @@ Este projeto foi desenvolvido para apresentação acadêmica em turma de Ciênci
 
 Implementa aplicativo Dash contendo informações a respeito da localização geoespacial de aldeias indígenas brasileiras.
 
+## Demonstração
+
+Confira o [artigo sobre o projeto](https://mmartiniano.medium.com/data-science-dash-app-com-localiza%C3%A7%C3%A3o-de-aldeias-ind%C3%ADgenas-brasileiras-835d972f714e) ou acesse a [aplicação web](https://br-indigenous-village-location.herokuapp.com/).
+
 ## Fonte
 
 O IBGE disponibilizou dados geográficos de localidades brasileiras de acordo com pesquisa feita em 2010. Dentre os locais, foram classificados como "ALDEIA INDÍGENA" os pontos que possuem "casa ou conjunto de casas ou malocas [...] que serve de habitação para o indígena e aloja diversas famílias" e "no mínimo, 20 habitantes indígenas em uma ou mais moradias".
 
-A publicação oficial do instituto pode ser acessada nessa [página](https://agenciadenoticias.ibge.gov.br/agencia-sala-de-imprensa/2013-agencia-de-noticias/releases/14126-asi-ibge-disponibiliza-coordenadas-e-altitudes-para-21304-localidades-brasileiras). Os dados utilizados e as informações de classificação das localidades podem ser acessadas nesse [serviço](ftp://geoftp.ibge.gov.br/organizacao_do_territorio/estrutura_territorial/localidades).
+A publicação oficial do instituto pode ser acessada nessa [página](https://agenciadenoticias.ibge.gov.br/agencia-sala-de-imprensa/2013-agencia-de-noticias/releases/14126-asi-ibge-disponibiliza-coordenadas-e-altitudes-para-21304-localidades-brasileiras). Os dados utilizados e as informações de classificação das localidades podem ser acessadas no serviço:
+
+ftp://geoftp.ibge.gov.br/organizacao_do_territorio/estrutura_territorial/localidades
 
 ## Tecnologias e Dependências
 

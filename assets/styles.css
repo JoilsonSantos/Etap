@@ -62,6 +62,7 @@ body, input, button {
 
 .left p {
     text-align: justify;
+    display: none;
 }
 
 .map {
@@ -80,6 +81,10 @@ body, input, button {
 
     .right {
         width: 55%;
+    }
+
+    .left p {
+        display: inline;
     }
 }
 
